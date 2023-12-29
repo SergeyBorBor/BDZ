@@ -12,15 +12,9 @@
 int main() {
     printf(" Результаты мониторинга системы успешно записаны в файл log.txt.\n");
     // Открытие файла log.txt для записи
-    int fd = open("../files/log.txt", O_WRONLY | O_CREAT | O_TRUNC, 0644);
+    int fd = open("../filles/log.txt", O_WRONLY | O_CREAT | O_TRUNC, 0644);
     if (fd == -1) {
         perror("open");
-        exit(1);
-    }
-
-    // Дублирование дескриптора файлового дескриптора stdout для записи в файл
-    if (dup2(fd, STDOUT_FILENO) == -1) {
-        perror("dup2");
         exit(1);
     }
 
