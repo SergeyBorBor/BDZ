@@ -17,11 +17,12 @@ int main() {
         perror("open");
         exit(1);
     }
-int new_fd = fcntl(fd1, F_DUPFD, fd2);
-if (new_fd == -1) {
-    perror("fcntl");
-    exit(EXIT_FAILURE);
-}
+
+    // Дублирование дескриптора файлового дескриптора stdout для записи в файл
+    if (dup2(fd, STDOUT_FILENO) == -1) {
+        perror("dup2");
+        exit(1);
+    }
 
     // Отображение информации о системе
     printf("System Monitoring");
