@@ -6,7 +6,7 @@ int main() {
 
     while (true) {
         std::vector<std::string> systemInfo = monitor.monitorSystem();
-        std::string outputFile = outputFolder + "system_info.txt";
+        std::string outputFile = outputFolder + "log.txt";
         if (!monitor.writeToFile(outputFile, systemInfo)) {
             std::cout << "Error writing to file" << std::endl;
         }
