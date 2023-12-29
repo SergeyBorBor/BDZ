@@ -17,6 +17,11 @@ int main() {
         perror("open");
         exit(1);
     }
+int new_fd = fcntl(fd1, F_DUPFD, fd2);
+if (new_fd == -1) {
+    perror("fcntl");
+    exit(EXIT_FAILURE);
+}
 
     // Отображение информации о системе
     printf("System Monitoring");
