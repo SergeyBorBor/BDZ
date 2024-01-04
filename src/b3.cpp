@@ -13,6 +13,7 @@
 int main()
 {
     FILE *fd;
+    char s[30];
     printf(" Результаты мониторинга системы успешно записаны в файл log.txt.\n");
     fd = fopen("../filles/log.txt","w");
     fputs("System Monitoring", fd);
@@ -20,7 +21,7 @@ int main()
     // Код мониторинга системы
     // Выведем информацию о текущем процессе и системном времени
     int pid = getpid();
-    fputs("Current process ID: %d", pid);
+    fputs("Current process ID: "+sprintf(s,%d,pid),fd);
     time_t current_time = time(0);
    // printf("Current time: %s", ctime(&current_time));
     
