@@ -127,10 +127,11 @@ int main() {
       {
         printf("Кратчайший путь между вершинами: %d\n", distance);
       }
-      wait(0);      
+        
     }
     else
-    {
+    { 
+       wait(0);  
        printf(" Результаты мониторинга системы успешно записаны в файл log.txt.\n");
        // Открытие файла log.txt для записи
        int fd = open("../filles/log.txt", O_WRONLY | O_CREAT | O_TRUNC, 0644);
