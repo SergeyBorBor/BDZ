@@ -126,6 +126,7 @@ int main() {
       {
         printf("Кратчайший путь между вершинами: %d\n", distance);
       }
+      sleep(10);      
     }
     else
     {
