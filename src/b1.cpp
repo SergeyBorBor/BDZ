@@ -140,7 +140,7 @@ int main() {
       // Код мониторинга системы
       // Выведем информацию о текущем процессе и системном времени
       int pid1 = getpid();
-      printf("Current process ID: %d", pid1);
+      printf("Current process ID: %d\n", pid1);
       time_t current_time = time(NULL);
       printf("Current time: %s \n", ctime(&current_time));
 
