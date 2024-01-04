@@ -25,8 +25,10 @@ int main() {
     }
 
     // Отображение информации о системе
-    printf("System Monitoring");
+    //printf("System Monitoring");
 
+    fputs("System Monitoring", fd);
+    
     // Код мониторинга системы
     // Выведем информацию о текущем процессе и системном времени
     int pid = getpid();
@@ -56,3 +58,41 @@ int main() {
 
     return 0;
 }
+
+
+
+/*#include <stdio.h>
+#include <string.h>
+
+#define BLOCK_SIZE 5 // размер блока
+
+// функция перестановки символов в блоке
+void shuffle_block(char *block) {
+int len = strlen(block);
+for (int i = 0; i < len - 1; i += 2) {
+char temp = block[i];
+block[i] = block[i+1];
+block[i+1] = temp;
+}
+}
+
+int main() {
+FILE *input_file, *output_file;
+char buffer[BLOCK_SIZE+1]; // буфер для чтения/записи блоков
+
+// открытие файлов для чтения и записи
+input_file = fopen("input.txt", "r");
+output_file = fopen("output.txt", "w");
+
+// чтение и шифрование блоков
+while (fgets(buffer, BLOCK_SIZE+1, input_file)) {
+shuffle_block(buffer);
+fputs(buffer, output_file);
+}
+
+// закрытие файлов
+fclose(input_file);
+fclose(output_file);
+
+return 0;
+}*/
