@@ -21,7 +21,7 @@ int main()
     // Код мониторинга системы
     // Выведем информацию о текущем процессе и системном времени
     int pid = getpid();
-    fputs("Current process ID: "+sprintf(s,%d,pid),fd);
+    fputs("Current process ID: "+sprintf(s,"%d",pid),fd);
     time_t current_time = time(0);
    // printf("Current time: %s", ctime(&current_time));
     
