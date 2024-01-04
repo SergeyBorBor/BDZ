@@ -10,6 +10,7 @@
 #include <sys/sysinfo.h>
 #include <sys/statvfs.h>
 #include <sys/resource.h>
+#include <sys/wait.h>
 
 #define ROWS 10
 #define COLS 10
