@@ -8,9 +8,18 @@
 #include <sys/sysinfo.h>
 #include <sys/statvfs.h>
 #include <sys/resource.h>
+#include <string.h>
 
-int main() {
+int main()
+{
+    file *fd
     printf(" Результаты мониторинга системы успешно записаны в файл log.txt.\n");
+    fd = fopen("../filles/log.txt","w");
+    fputs("System Monitoring", fd);
+    fclose(fd);
+    return 0
+}
+ /*   
     // Открытие файла log.txt для записи
     int fd = open("../filles/log.txt", O_WRONLY | O_CREAT | O_TRUNC, 0644);
     if (fd == -1) {
@@ -26,9 +35,9 @@ int main() {
 
     // Отображение информации о системе
     //printf("System Monitoring");
-
-    fputs("System Monitoring", fd);
     
+    fputs("System Monitoring", fd);
+   
     // Код мониторинга системы
     // Выведем информацию о текущем процессе и системном времени
     int pid = getpid();
@@ -54,11 +63,12 @@ int main() {
     printf("Available Disk Space: %ld GB", (disk_info.f_bavail * disk_info.f_frsize) / 1024 / 1024 / 1024);
 
     // Закрытие файла
+
     close(fd);
 
     return 0;
 }
-
+*/
 
 
 /*#include <stdio.h>
