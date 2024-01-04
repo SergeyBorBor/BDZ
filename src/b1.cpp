@@ -107,7 +107,7 @@ int leeAlgorithm(int startX, int startY, int endX, int endY) {
 int main() {
     pid_t pid;
     pid = fork();
-    if(pid == 0)
+    if(pid != 0)
     {
       printGraph();
 
