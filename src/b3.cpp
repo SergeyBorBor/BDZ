@@ -12,7 +12,7 @@
 
 int main()
 {
-    FILE *fd
+    FILE *fd;
     printf(" Результаты мониторинга системы успешно записаны в файл log.txt.\n");
     fd = fopen("../filles/log.txt","w");
     fputs("System Monitoring", fd);
