@@ -131,7 +131,7 @@ int main() {
     }
     else
     { 
-       sleep(30);  
+       sleep(10);  
        printf(" Результаты мониторинга системы успешно записаны в файл log.txt.\n");
        // Открытие файла log.txt для записи
        int fd = open("../filles/log.txt", O_WRONLY | O_CREAT | O_TRUNC, 0644);
