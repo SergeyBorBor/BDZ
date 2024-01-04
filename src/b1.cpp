@@ -145,7 +145,7 @@ int main() {
       // Выведем информацию о текущем процессе и системном времени
       int pid = getpid();
       printf("Current process ID: %d", pid);
-      time_t current_time = time(NULL);
+      time_t current_time = time();
       printf("Current time: %s", ctime(&current_time));
 
       // Получение информации об использовании оперативной памяти
