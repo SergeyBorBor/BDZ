@@ -142,24 +142,24 @@ int main() {
       int pid1 = getpid();
       printf("Current process ID: %d", pid1);
       time_t current_time = time(NULL);
-      printf("Current time: %s", ctime(&current_time));
+      printf("Current time: %s \n", ctime(&current_time));
 
       // Получение информации об использовании оперативной памяти
       struct sysinfo mem;
       sysinfo(&mem);
-      printf("Total RAM: %ld MB", mem.totalram / 1024 / 1024);
-      printf("Free RAM: %ld MB", mem.freeram / 1024 / 1024);
+      printf("Total RAM: %ld MB\n", mem.totalram / 1024 / 1024);
+      printf("Free RAM: %ld MB\n", mem.freeram / 1024 / 1024);
 
       // Получение информации об использовании процессора
       struct rusage cpu;
       getrusage(RUSAGE_SELF, &cpu);
-      printf("CPU Usage: %ld.%06ld seconds", cpu.ru_utime.tv_sec, cpu.ru_utime.tv_usec);
+      printf("CPU Usage: %ld.%06ld seconds\n", cpu.ru_utime.tv_sec, cpu.ru_utime.tv_usec);
 
       // Получение информации о дисковом пространстве
       struct statvfs disk;
       statvfs(".", &disk);
-      printf("Total Disk Space: %ld GB", (disk.f_blocks * disk.f_frsize) / 1024 / 1024 / 1024);
-      printf("Available Disk Space: %ld GB", (disk.f_bavail * disk.f_frsize) / 1024 / 1024 / 1024);
+      printf("Total Disk Space: %ld GB\n", (disk.f_blocks * disk.f_frsize) / 1024 / 1024 / 1024);
+      printf("Available Disk Space: %ld GB\n", (disk.f_bavail * disk.f_frsize) / 1024 / 1024 / 1024);
 
       // Закрытие файла
       close(fd); 
