@@ -1,111 +1,104 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 
-#define ROWS 10 // задаем константу, определяющую число рядов
-#define COLS 10 // задаем константу, определяющую число столбцов
+#define ROWS 10
+#define COLS 10
 
-int queue[ROWS * COLS][2]; // задаем двумерный массив для хранения координат (x, y) 
-int front = -1, rear = -1; // задаем переменные для отслеживания начала и конца очереди
+int graph[ROWS][COLS];
 
-int isInsideGrid(int x, int y) {
-    return (x >= 0 && x < ROWS && y >= 0 && y < COLS); // проверка x и y на нахождение в пределах сетки
-}
-
-int isEmpty() {
-    return front == -1 && rear == -1; // проверка наличия очереди
-}
-
-void enqueue(int x, int y) {
-    if (isEmpty()) { 
-        front = rear = 0; // Если очередь пуста front = rear = 0 (установливаем начало и конец очереди на 0)
-    } else {
-        rear++; // Если очередь не пуста, увеличиваем rear(конец очереди) на 1
-    }
-    queue[rear][0] = x; // записываем x в очередь
-    queue[rear][1] = y; // записываем у в очередь
-}
-
-void dequeue() {
-    if (front == rear) {
-        front = rear = -1; // Если начало и конец очереди совпадают front = rear = -1 (Установливаем начало и конец очереди на -1)
-    } else {
-        front++; // Если начало и конец очереди не совпадают, увеличиваем front(начало очереди) на 1
-    }
-}
-
-int leeAlgorithm(int grid[ROWS][COLS], int startX, int startY, int endX, int endY) { // Объявление функции, работающей по алгоритму Ли
-    int dx[] = {-1, 0, 1, 0};  // массив смещения по вертикали
-    int dy[] = {0, 1, 0, -1};  // массив смещения по горизонтали
-
-    int visited[ROWS][COLS] = {0}; // Инициализация массива visited нулями
-    int distance[ROWS][COLS] = {0}; // Инициализация массива distance нулями
-
-    visited[startX][startY] = 1; // помечаем начальную вершину как посещенную
-    distance[startX][startY] = 0; // установливаем расстояние до начальной вершины равным 0
-
-    enqueue(startX, startY); // добавляем начальную вершину в очередь
-
-    while (!isEmpty()) { // Пока очередь не пуста
-        int x = queue[front][0]; // Получаем координату x из начала очереди
-        int y = queue[front][1]; // Получаем координату y из начала очереди
-        dequeue(); // удаляем вершину из начала очереди
-
-        if (x == endX && y == endY) { // Если текущая вершина равна конечной вершине
-            return distance[x][y]; // возвращем расстояние до конечной вершины
-        }
-
-        for (int i = 0; i < 4; i++) { // для каждого смещения
-            int newX = x + dx[i]; // Вычисляем новую координату x
-            int newY = y + dy[i]; // Вычисляем новую координату y
- 
-            if (isInsideGrid(newX, newY) && !visited[newX][newY] && grid[newX][newY] != 0) { // если новая координата находится в пределах сетки, не посещена и не равна 0
-                visited[newX][newY] = 1; // помечаем новую вершину как посещенную
-                distance[newX][newY] = distance[x][y] + 1; // установливаем расстояние от начальной вершины до новой вершины
-                enqueue(newX, newY); // добавляем новую вершину в очередь
-            }
-        }
-    }
-
-    return -1;  // кратчайший путь не найден
-}
-
-void printGrid(int grid[ROWS][COLS]) { // функция вывода матрицы планарного графа на экран 
+void generateGraph() {
+    // Заполнение графа случайными значениями
+    srand(time(NULL));
     for (int i = 0; i < ROWS; i++) {
         for (int j = 0; j < COLS; j++) {
-            printf("%d ", grid[i][j]);
+            graph[i][j] = rand() % 2;
+        }
+    }
+}
+
+void printGraph() {
+    // Вывод графа на экран
+    for (int i = 0; i < ROWS; i++) {
+        for (int j = 0; j < COLS; j++) {
+            printf("%d ", graph[i][j]);
         }
         printf("\n");
     }
 }
 
-int main() {  // Основная функция программы
-    int grid[ROWS][COLS] = { // задаем матрицу планарного графа
-        {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-        {1, 0, 1, 0, 0, 0, 0, 1, 0, 1},
-        {1, 0, 1, 0, 1, 1, 0, 1, 0, 1},
-        {1, 0, 0, 0, 1, 0, 0, 0, 0, 1},
-        {1, 1, 1, 0, 1, 0, 1, 1, 0, 1},
-        {1, 0, 1, 0, 1, 0, 0, 0, 0, 1},
-        {1, 0, 1, 1, 1, 1, 1, 1, 0, 1},
-        {1, 0, 1, 0, 0, 0, 0, 1, 0, 1},
-        {1, 0, 1, 0, 1, 1, 0, 1, 0, 1},
-        {1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
-    };
+int leeAlgorithm(int startX, int startY, int endX, int endY) {
+    // Алгоритм Ли для поиска кратчайшего пути
+    int queue[ROWS * COLS][2];
+    int front = 0, rear = 0;
+    int visited[ROWS][COLS] = {0};
+    int distance[ROWS][COLS] = {0};
 
-    printf("Матрица планарного графа:\n");
-    printGrid(grid); //выводим матрицу планарного графа на экран 
+    queue[rear][0] = startX;
+    queue[rear][1] = startY;
+    rear++;
+    visited[startX][startY] = 1;
 
-    int startX, startY, endX, endY; // Объявление переменных для координат начальной и конечной вершин
-    printf("\nВведите координаты начальной вершины (x, y): ");
-    scanf("%d %d", &startX, &startY); // Ввод координат начальной вершины
-    printf("Введите координаты конечной вершины (x, y): ");
-    scanf("%d %d", &endX, &endY); // Ввод координат конечной вершины
+    while (front != rear) {
+        int x = queue[front][0];
+        int y = queue[front][1];
+        front++;
 
-    int shortestPath = leeAlgorithm(grid, startX, startY, endX, endY); // Вызов функции leeAlgorithm для поиска кратчайшего пути
+        if (x == endX && y == endY) {
+            return distance[x][y];
+        }
 
-    if (shortestPath != -1) { // Если кратчайший путь найден, выводим его на экран 
-        printf("\nКратчайший путь между вершинами: %d", shortestPath);
+        if (x > 0 && graph[x-1][y] && !visited[x-1][y]) {
+            queue[rear][0] = x-1;
+            queue[rear][1] = y;
+            rear++;
+            visited[x-1][y] = 1;
+            distance[x-1][y] = distance[x][y] + 1;
+        }
+
+        if (x < ROWS-1 && graph[x+1][y] && !visited[x+1][y]) {
+            queue[rear][0] = x+1;
+            queue[rear][1] = y;
+            rear++;
+            visited[x+1][y] = 1;
+            distance[x+1][y] = distance[x][y] + 1;
+        }
+
+        if (y > 0 && graph[x][y-1] && !visited[x][y-1]) {
+            queue[rear][0] = x;
+            queue[rear][1] = y-1;
+            rear++;
+            visited[x][y-1] = 1;
+            distance[x][y-1] = distance[x][y] + 1;
+        }
+
+        if (y < COLS-1 && graph[x][y+1] && !visited[x][y+1]) {
+            queue[rear][0] = x;
+            queue[rear][1] = y+1;
+            rear++;
+            visited[x][y+1] = 1;
+            distance[x][y+1] = distance[x][y] + 1;
+        }
+    }
+
+    return -1;
+}
+
+int main() {
+    generateGraph();
+    printGraph();
+
+    int startX, startY, endX, endY;
+    printf("Введите координаты начальной вершины (x y): ");
+    scanf("%d %d", &startX, &startY);
+    printf("Введите координаты конечной вершины (x y): ");
+    scanf("%d %d", &endX, &endY);
+
+    int distance = leeAlgorithm(startX, startY, endX, endY);
+    if (distance == -1) {
+        printf("Путь не найден\n");
     } else {
-        printf("\nКратчайший путь не найден.\n"); // Если кратчайший путь не найден, выводим на экран данное сообещние
+        printf("Кратчайший путь между вершинами: %d\n", distance);
     }
 
     return 0;
