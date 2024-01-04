@@ -28,16 +28,6 @@ int graph[ROWS][COLS] = { // задаем матрицу планарного г
         {1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
     };
 
-void generateGraph() {
-    // Заполнение графа случайными значениями
-    srand(time(NULL));
-    for (int i = 0; i < ROWS; i++) {
-        for (int j = 0; j < COLS; j++) {
-            graph[i][j] = rand() % 2;
-        }
-    }
-}
-
 void printGraph() {
     // Вывод графа на экран
     for (int i = 0; i < ROWS; i++) {
@@ -131,7 +121,7 @@ int main() {
     }
     else
     { 
-       sleep(10);  
+       // sleep(10);
        printf(" Результаты мониторинга системы успешно записаны в файл log.txt.\n");
        // Открытие файла log.txt для записи
        int fd = open("../filles/log.txt", O_WRONLY | O_CREAT | O_TRUNC, 0644);
