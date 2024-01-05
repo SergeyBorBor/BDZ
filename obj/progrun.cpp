@@ -1,7 +1,7 @@
 #include <cstdlib>
 int main() {
-    // Запуск программы program.cpp
-    system("g++ ../Src/Program.cpp -o program && ./program");
+    // Запуск программы prog2.cpp
+    system("g++ ../Src/prog2.cpp -o program && ./prog2");
 
     return 0;
 }
