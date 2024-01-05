@@ -124,7 +124,8 @@ int main() {
        
        printf(" Результаты мониторинга записаны в файл log.txt.\n");
        //Запись результатов мониторинга в файл log.txt
-       freopen("log.txt", "w", stdout);
+            //freopen("log.txt", "w", stdout);
+            freopen("../filles/log.txt", "w", stdout);
        
        // Отображение информации о системе
        printf("System Monitoring:\n");
