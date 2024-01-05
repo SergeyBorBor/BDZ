@@ -1,1 +1,1 @@
-freopen("myfile.txt", "w", stdout);
+freopen("filles.txt", "w", stdout);
