@@ -1,4 +1,3 @@
-#include <function.h>
 #include <stdio.h>
 
 void monitoring()
