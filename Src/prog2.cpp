@@ -81,45 +81,43 @@ int leeAlgorithm(int startX, int startY, int endX, int endY) {
     return -1;
 }
 int main() {
-    pid_t pid;
-    pid = fork();
-    if(pid != 0) {
-      printGraph();
-
-      int startX, startY, endX, endY;
-      printf("Введите координаты начальной вершины (x y): ");
-      scanf("%d %d", &startX, &startY);
-      printf("Введите координаты конечной вершины (x y): ");
-      scanf("%d %d", &endX, &endY);
-      int distance = leeAlgorithm(startX, startY, endX, endY);
-      if (distance == -1) {
-        printf("Путь не найден\n");
-      } 
-      else {
+printGraph();
+int startX, startY, endX, endY;
+printf("Введите координаты начальной вершины (x y): ");
+scanf("%d %d", &startX, &startY);
+printf("Введите координаты конечной вершины (x y): ");
+scanf("%d %d", &endX, &endY);
+pid_t pid;
+pid = fork();
+if(pid != 0) {
+  int distance = leeAlgorithm(startX, startY, endX, endY);
+  if (distance == -1) {
+    printf("Путь не найден\n");
+  } 
+  else {
         printf("Кратчайший путь между вершинами: %d\n", distance);
-      }
-        wait(0);
-    }
-    else { 
-      sleep(10);
-      printf(" Результаты мониторинга записаны в файл log.txt.\n");
-      freopen("../filles/log.txt", "w", stdout); //Запись результатов мониторинга в файл log.txt
-      printf("System Monitoring:\n"); // Отображение информации о системе
-      int pid1 = getpid(); // Выведем информацию о текущем процессе и системном времени
-      printf("Current process ID: %d\n", pid1);
-      time_t current_time = time(NULL);
-      printf("Current time: %s \n", ctime(&current_time));
-      struct sysinfo mem;  // Получение информации об использовании оперативной памяти
-      sysinfo(&mem);
-      printf("Total RAM: %ld MB\n", mem.totalram / 1024 / 1024);
-      printf("Free RAM: %ld MB\n", mem.freeram / 1024 / 1024);   
-      struct rusage cpu; // Получение информации об использовании процессора
-      getrusage(RUSAGE_SELF, &cpu);
-      printf("CPU Usage: %ld.%06ld seconds\n", cpu.ru_utime.tv_sec, cpu.ru_utime.tv_usec);
-      struct statvfs disk;  // Получение информации о дисковом пространстве
-      statvfs(".", &disk);
-      printf("Total Disk Space: %ld GB\n", (disk.f_blocks * disk.f_frsize) / 1024 / 1024 / 1024);
-      printf("Available Disk Space: %ld GB\n", (disk.f_bavail * disk.f_frsize) / 1024 / 1024 / 1024);
-   }
-    return 0;
+  }
+  wait(0);
+}
+else { 
+  printf(" Результаты мониторинга записаны в файл log.txt.\n");
+  freopen("../filles/log.txt", "w", stdout); //Запись результатов мониторинга в файл log.txt
+  printf("System Monitoring:\n"); // Отображение информации о системе
+  int pid1 = getpid(); // Выведем информацию о текущем процессе и системном времени
+  printf("Current process ID: %d\n", pid1);
+  time_t current_time = time(NULL);
+  printf("Current time: %s \n", ctime(&current_time));
+  struct sysinfo mem;  // Получение информации об использовании оперативной памяти
+  sysinfo(&mem);
+  printf("Total RAM: %ld MB\n", mem.totalram / 1024 / 1024);
+  printf("Free RAM: %ld MB\n", mem.freeram / 1024 / 1024);   
+  struct rusage cpu; // Получение информации об использовании процессора
+  getrusage(RUSAGE_SELF, &cpu);
+  printf("CPU Usage: %ld.%06ld seconds\n", cpu.ru_utime.tv_sec, cpu.ru_utime.tv_usec);
+  struct statvfs disk;  // Получение информации о дисковом пространстве
+  statvfs(".", &disk);
+  printf("Total Disk Space: %ld GB\n", (disk.f_blocks * disk.f_frsize) / 1024 / 1024 / 1024);
+  printf("Available Disk Space: %ld GB\n", (disk.f_bavail * disk.f_frsize) / 1024 / 1024 / 1024);
+}
+return 0;
 }
