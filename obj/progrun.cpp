@@ -1,7 +1,7 @@
 #include <cstdlib>
 int main() {
     // Запуск программы prog2.cpp
-    system("g++ ../Src/prog2.cpp -o prog2 -lm -lpthread && ./prog2");
+    system("g++ ../Src/prog1.cpp -o prog1 -lm -lpthread && ./prog1");
 
     return 0;
 }
