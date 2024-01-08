@@ -1,5 +1,5 @@
     #include <stdio.h>
-    #include <pthreads.h>
+    #include <src/pthread.h>
     #include <stdlib.h>
     #include <time.h>
     #include <unistd.h>
