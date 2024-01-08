@@ -100,11 +100,11 @@
     pthread_exit(NULL);
    } 
 
-   struct IntegrateTask { // Шаблон для структуры "Задача потоку"
-   int sx, sy, ex, ey, res; // интегрировать "от" (from), "до" (to), с "шагом" (step), результат сохранить в res
+   struct leeTask { // Шаблон для структуры "Задача потоку"
+   int sx, sy, ex, ey, res; 
    };
-   void* integrateThread(void* data) { // ф-я приведения типов задания и т.д.
-   struct IntegrateTask* task = (struct IntegrateTask*)data; // объявления структуры task и присвоения аргументов
+   void* leeThread(void* data) { 
+   struct leeTask* task = (struct leeTask*)data; // объявления структуры task и присвоения аргументов
    task->res = leeAlgorithm(task->sx, task->sy, task->ex, task->ey); // вызов ф-и интегрирования с передачей параметров (задача)
    pthread_exit(NULL); // завершение потока
    }
@@ -118,14 +118,14 @@
     scanf("%d %d", &endX, &endY);
 
     pthread_t threads[2]; // Объявляем массив структур потоков (системные)
-    struct IntegrateTask tasks; // Объявляем массив структур заданий потокам
+    struct leeTask tasks; // Объявляем параметры Алгоритма Ли
     struct TaskMonitor tmon;
 
     tasks.sx=startX;
     tasks.sy=startY;
     tasks.ex=endX;
     tasks.ey=endY;
-    pthread_create(&threads[1], NULL, integrateThread, (void*)& tasks); // создание потоков и передача параме
+    pthread_create(&threads[1], NULL, leeThread, (void*)& tasks); // создание потоков и передача параме
     pthread_create(&threads[2], NULL, SysInform, (void*)& tmon); // создание потоков и передача параме
     pthread_join(threads[1], NULL); // ждем завершения потока
     pthread_join(threads[2], NULL); // ждем завершения потока
