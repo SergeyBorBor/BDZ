@@ -9,16 +9,10 @@
     #include <sys/sysinfo.h>
     #include <sys/statvfs.h>
     #include <sys/resource.h>
+    #include <sys/wait.h>
     #define ROWS 10
     #define COLS 10
-    
-    int pid1;
-    int startX, startY, endX, endY, res;
-    time_t current_time;
-    struct sysinfo mem;
-    struct rusage cpu; 
-    struct statvfs disk; 
-    
+
     int graph[ROWS][COLS] = { // задаем матрицу планарного графа
     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
     {1, 0, 1, 0, 0, 0, 0, 1, 0, 1},
@@ -88,55 +82,85 @@
     return -1;
     }
    
-   void* SysInform()
-   {
-    pid1 = getpid(); 
-    current_time = time(NULL);
+/*   void* SysInform()
+   {FILE *fp;
+    printf(" Результаты мониторинга записаны в файл log.txt.\n");
+    fp=freopen("../filles/log.txt", "w", stdout); //Запись результатов мониторинга в файл log.txt
+    printf("System Monitoring:\n"); // Отображение информации о системе
+    int pid1 = getpid(); // Выведем информацию о текущем процессе и системном времени
+    printf("Current process ID: %d\n", pid1);
+    time_t current_time = time(NULL);
+    printf("Current time: %s \n", ctime(&current_time));
+    struct sysinfo mem; // Получение информации об использовании оперативной памяти
     sysinfo(&mem);
+    printf("Total RAM: %ld MB\n", mem.totalram / 1024 / 1024);
+    printf("Free RAM: %ld MB\n", mem.freeram / 1024 / 1024);
+    struct rusage cpu; // Получение информации об использовании процессора
     getrusage(RUSAGE_SELF, &cpu);
+    printf("CPU Usage: %ld.%06ld seconds\n", cpu.ru_utime.tv_sec, cpu.ru_utime.tv_usec);
+    struct statvfs disk; // Получение информации о дисковом пространстве
     statvfs(".", &disk);
-   }
+    printf("Total Disk Space: %ld GB\n", (disk.f_blocks * disk.f_frsize) / 1024 / 1024 / 1024);
+    printf("Available Disk Space: %ld GB\n", (disk.f_bavail * disk.f_frsize) / 1024 / 1024 / 1024);
+   }*/
    
-   void* leeThread() { 
-   res = leeAlgorithm(startX, startY, endX, endY); // вызов ф-й с передачей параметров (задача)
+   struct TaskMonitor {
+   double tpid;
+   time_t tcurrent_time;
+   struct sysinfo tmem; // Получение информации об использовании оперативной памяти
+   struct rusage tcpu; // Получение информации об использовании процессора
+   struct statvfs tdisk; // Получение информации о дисковом пространстве
+   };
+
+   void* SysInform(void* data)
+   {struct TaskMonitor* task = (struct TaskMonitor*) data;
+    printf(" Результаты мониторинга записаны в файл log.txt.\n");
+    task->tpid = getpid(); // Выведем информацию о текущем процессе и системном времени
+    task->tcurrent_time = time(NULL);
+    sysinfo(&task->tmem);
+    getrusage(RUSAGE_SELF, &task->tcpu);
+    statvfs(".", &task->tdisk);
+    pthread_exit(NULL);
+   } 
+ 
+
+   struct IntegrateTask { // Шаблон для структуры "Задача потоку"
+   int sx, sy, ex, ey, res; // интегрировать "от" (from), "до" (to), с "шагом" (step), результат сохранить в res
+   };
+   void* integrateThread(void* data) { // ф-я приведения типов задания и т.д.
+   struct IntegrateTask* task = (struct IntegrateTask*)data; // объявления структуры task и присвоения аргументов
+   task->res = leeAlgorithm(task->sx, task->sy, task->ex, task->ey); // вызов ф-и интегрирования с передачей параметров (задача)
    pthread_exit(NULL); // завершение потока
    }
 
     int main() {
     printGraph();
-    
+    int startX, startY, endX, endY;
     printf("Введите координаты начальной вершины (x y): ");
     scanf("%d %d", &startX, &startY);
     printf("Введите координаты конечной вершины (x y): ");
     scanf("%d %d", &endX, &endY);
 
     pthread_t threads[2]; // Объявляем массив структур потоков (системные)
-    
-    
-    pthread_create(&threads[1], NULL, leeThread, NULL); // создание потоков и передача параметров
-    pthread_create(&threads[2], NULL, SysInform, NULL); // создание потоков и передача параметров
+    struct IntegrateTask tasks; // Объявляем массив структур заданий потокам
+    struct TaskMonitor tmon;
+
+    tasks.sx=startX;
+    tasks.sy=startY;
+    tasks.ex=endX;
+    tasks.ey=endY;
+    pthread_create(&threads[1], NULL, integrateThread, (void*)& tasks); // создание потоков и передача параме
+    pthread_create(&threads[2], NULL, SysInform, (void*)& tmon); // создание потоков и передача параме
     pthread_join(threads[1], NULL); // ждем завершения потока
     pthread_join(threads[2], NULL); // ждем завершения потока
 
-    if (res == -1) {
+    if (tasks.res == -1) {
       printf("Путь не найден\n");
     }
     else {
-      printf("Кратчайший путь между вершинами: %d\n", res);
+      printf("Кратчайший путь между вершинами: %d\n", tasks.res);
     }
-    
-    printf(" Результаты мониторинга записаны в файл log.txt.\n");
-
-    freopen("../filles/log.txt", "w", stdout); //Запись результатов мониторинга в файл log.txt
-    printf("System Monitoring:\n"); 
-    printf("Current process ID: %d\n", pid1);
-    printf("Current time: %s \n", ctime(&current_time));
-    printf("Total RAM: %ld MB\n", mem.totalram / 1024 / 1024);
-    printf("Free RAM: %ld MB\n", mem.freeram / 1024 / 1024);
-    printf("CPU Usage: %ld.%06ld seconds\n", cpu.ru_utime.tv_sec, cpu.ru_utime.tv_usec);
-    printf("Total Disk Space: %ld GB\n", (disk.f_blocks * disk.f_frsize) / 1024 / 1024 / 1024);
-    printf("Available Disk Space: %ld GB\n", (disk.f_bavail * disk.f_frsize) / 1024 / 1024 / 1024);
-
     return 0;
     }
+
 
