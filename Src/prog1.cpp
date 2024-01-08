@@ -82,30 +82,8 @@
     return -1;
     }
    
-/*   void* SysInform()
-   {FILE *fp;
-    printf(" Результаты мониторинга записаны в файл log.txt.\n");
-    fp=freopen("../filles/log.txt", "w", stdout); //Запись результатов мониторинга в файл log.txt
-    printf("System Monitoring:\n"); // Отображение информации о системе
-    int pid1 = getpid(); // Выведем информацию о текущем процессе и системном времени
-    printf("Current process ID: %d\n", pid1);
-    time_t current_time = time(NULL);
-    printf("Current time: %s \n", ctime(&current_time));
-    struct sysinfo mem; // Получение информации об использовании оперативной памяти
-    sysinfo(&mem);
-    printf("Total RAM: %ld MB\n", mem.totalram / 1024 / 1024);
-    printf("Free RAM: %ld MB\n", mem.freeram / 1024 / 1024);
-    struct rusage cpu; // Получение информации об использовании процессора
-    getrusage(RUSAGE_SELF, &cpu);
-    printf("CPU Usage: %ld.%06ld seconds\n", cpu.ru_utime.tv_sec, cpu.ru_utime.tv_usec);
-    struct statvfs disk; // Получение информации о дисковом пространстве
-    statvfs(".", &disk);
-    printf("Total Disk Space: %ld GB\n", (disk.f_blocks * disk.f_frsize) / 1024 / 1024 / 1024);
-    printf("Available Disk Space: %ld GB\n", (disk.f_bavail * disk.f_frsize) / 1024 / 1024 / 1024);
-   }*/
-   
    struct TaskMonitor {
-   double tpid;
+   pid_t tpid;
    time_t tcurrent_time;
    struct sysinfo tmem; // Получение информации об использовании оперативной памяти
    struct rusage tcpu; // Получение информации об использовании процессора
@@ -114,15 +92,13 @@
 
    void* SysInform(void* data)
    {struct TaskMonitor* task = (struct TaskMonitor*) data;
-    printf(" Результаты мониторинга записаны в файл log.txt.\n");
-    task->tpid = getpid(); // Выведем информацию о текущем процессе и системном времени
+//    task->tpid=getpid();
     task->tcurrent_time = time(NULL);
     sysinfo(&task->tmem);
     getrusage(RUSAGE_SELF, &task->tcpu);
     statvfs(".", &task->tdisk);
     pthread_exit(NULL);
    } 
- 
 
    struct IntegrateTask { // Шаблон для структуры "Задача потоку"
    int sx, sy, ex, ey, res; // интегрировать "от" (from), "до" (to), с "шагом" (step), результат сохранить в res
@@ -160,7 +136,15 @@
     else {
       printf("Кратчайший путь между вершинами: %d\n", tasks.res);
     }
+    printf(" Результаты мониторинга записаны в файл log.txt.\n");
+    freopen("../filles/log.txt", "w", stdout); //Запись результатов мониторинга в файл log.txt
+    printf("System Monitoring:\n"); // Отображение информации о системе
+    printf("Current time: %s \n", ctime(&tmon.tcurrent_time));
+    printf("Total RAM: %ld MB\n", tmon.tmem.totalram / 1024 / 1024);
+    printf("Free RAM: %ld MB\n", tmon.tmem.freeram / 1024 / 1024);
+    printf("CPU Usage: %ld.%06ld seconds\n", tmon.tcpu.ru_utime.tv_sec, tmon.tcpu.ru_utime.tv_usec);
+    printf("Total Disk Space: %ld GB\n", (tmon.tdisk.f_blocks * tmon.tdisk.f_frsize) / 1024 / 1024 / 1024);
+    printf("Available Disk Space: %ld GB\n", (tmon.tdisk.f_bavail * tmon.tdisk.f_frsize) / 1024 / 1024 / 1024);
     return 0;
     }
-
 
