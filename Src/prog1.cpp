@@ -13,6 +13,7 @@
     #define COLS 10
     
     int pid1;
+    int startX, startY, endX, endY, res;
     time_t current_time;
     struct sysinfo mem;
     struct rusage cpu; 
@@ -96,40 +97,32 @@
     statvfs(".", &disk);
    }
    
-   struct leeTask { // Шаблон для структуры "Задача потоку"
-   int sx, sy, ex, ey, res; //  результат сохранить в res
-   };
-   void* leeThread(void* data) { // ф-я приведения типов задания и т.д.
-   struct leeTask* task = (struct leeTask*)data; // объявления структуры task и присвоения аргументов
-   task->res = leeAlgorithm(task->sx, task->sy, task->ex, task->ey); // вызов ф-й с передачей параметров (задача)
+   void* leeThread() { 
+   res = leeAlgorithm(startX, startY, endX, endY); // вызов ф-й с передачей параметров (задача)
    pthread_exit(NULL); // завершение потока
    }
 
     int main() {
     printGraph();
-    int startX, startY, endX, endY;
+    
     printf("Введите координаты начальной вершины (x y): ");
     scanf("%d %d", &startX, &startY);
     printf("Введите координаты конечной вершины (x y): ");
     scanf("%d %d", &endX, &endY);
 
     pthread_t threads[2]; // Объявляем массив структур потоков (системные)
-    struct leeTask tasks; // Объявляем структуру параметров Алгоритма Ли
-   
-    tasks.sx=startX;
-    tasks.sy=startY;
-    tasks.ex=endX;
-    tasks.ey=endY;
-    pthread_create(&threads[1], NULL, leeThread, (void*)& tasks); // создание потоков и передача параметров
+    
+    
+    pthread_create(&threads[1], NULL, leeThread, NULL); // создание потоков и передача параметров
     pthread_create(&threads[2], NULL, SysInform, NULL); // создание потоков и передача параметров
     pthread_join(threads[1], NULL); // ждем завершения потока
     pthread_join(threads[2], NULL); // ждем завершения потока
 
-    if (tasks.res == -1) {
+    if (res == -1) {
       printf("Путь не найден\n");
     }
     else {
-      printf("Кратчайший путь между вершинами: %d\n", tasks.res);
+      printf("Кратчайший путь между вершинами: %d\n", res);
     }
     
     printf(" Результаты мониторинга записаны в файл log.txt.\n");
