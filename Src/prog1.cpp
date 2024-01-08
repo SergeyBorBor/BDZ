@@ -127,7 +127,7 @@
     
     printf(" Результаты мониторинга записаны в файл log.txt.\n");
 
-    freopen("log.txt", "w", stdout); //Запись результатов мониторинга в файл log.txt
+    freopen("../filles/log.txt", "w", stdout); //Запись результатов мониторинга в файл log.txt
     printf("System Monitoring:\n"); 
     printf("Current process ID: %d\n", pid1);
     printf("Current time: %s \n", ctime(&current_time));
