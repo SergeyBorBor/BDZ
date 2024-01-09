@@ -105,7 +105,7 @@
    };
    void* leeThread(void* data) { 
    struct leeTask* task = (struct leeTask*)data; // объявления структуры task и присвоения аргументов
-   task->res = leeAlgorithm(task->sx, task->sy, task->ex, task->ey); // вызов ф-и интегрирования с передачей параметров (задача)
+   task->res = leeAlgorithm(task->sx, task->sy, task->ex, task->ey); // вызов ф-и Алгоритма Ли с передачей параметров
    pthread_exit(NULL); // завершение потока
    }
 
@@ -117,7 +117,7 @@
     printf("Введите координаты конечной вершины (x y): ");
     scanf("%d %d", &endX, &endY);
 
-    pthread_t threads[2]; // Объявляем массив структур потоков (системные)
+    pthread_t threads[2]; // Объявляем массив структур потоков 
     struct leeTask tasks; // Объявляем параметры Алгоритма Ли
     struct TaskMonitor tmon;
 
