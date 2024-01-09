@@ -92,7 +92,7 @@
 
    void* SysInform(void* data)
    {struct TaskMonitor* task = (struct TaskMonitor*) data;
-    task->tpid=getpid();
+    // task->tpid=getpid();
     task->tcurrent_time = time(NULL);
     sysinfo(&task->tmem);
     getrusage(RUSAGE_SELF, &task->tcpu);
